@@ -1,6 +1,6 @@
 package view;
 
-public class IniciarPrograma {
+public class Programa {
     public static void iniciar(){
         TelaLogin.telaEscolhaLogin();
     }

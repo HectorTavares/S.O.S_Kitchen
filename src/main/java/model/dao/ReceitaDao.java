@@ -2,6 +2,7 @@ package model.dao;
 
 import model.entities.Ingrediente;
 import model.entities.Receita;
+import model.entities.Usuario;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface ReceitaDao {
     List<Receita> findByAllIngredientes(List<Ingrediente> listaIngredientes);
     List<Receita> findByIngredientes(List<Ingrediente> listaIngredientes);
     List<Receita> findByName(String nome);
+    List<Receita> findAllByAutor(Usuario autor);
 }

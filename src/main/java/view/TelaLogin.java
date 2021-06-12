@@ -120,7 +120,10 @@ public class TelaLogin {
             System.out.println("Digite sua senha : ");
             String senha = teclado.nextLine();
 
-            Usuario novoUsuario = new Usuario(nome, login, senha);
+            Usuario novoUsuario = new Usuario();
+            novoUsuario.setNome(nome);
+            novoUsuario.setLogin(login);
+            novoUsuario.setSenha(senha);
             Connection conn = DB.getConnection();
             UsuarioDao usuarioDao = DaoFactory.createUsuarioDao(conn);
             usuarioDao.insert(novoUsuario);

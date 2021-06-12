@@ -132,6 +132,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             st.setString(2, obj.getTempoPreparo());
             st.setString(3, obj.getSequenciaPreparo());
             Date date = ConversaoDeData.localDateToDate(obj.getData_Cadastro());
+            assert date != null;
             st.setDate(4, new java.sql.Date(date.getTime()));
             st.setInt(5, obj.getAutor().getId());
             st.setBoolean(6, false);
@@ -141,6 +142,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 if (rs.next()) {
                     int id = rs.getInt(1);
                     obj.setIdReceita(id);
+                    System.out.println("Pedido Cadastrado com Sucesso!");
                 }
                 DB.closeResultSet(rs);
             } else {
@@ -397,4 +399,27 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             DB.closeResultSet(rs);
         }
     } //read
+
+    @Override
+    public List<Receita> findAllByAutor(Usuario autor){
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        List<Receita>listaReceitas = new ArrayList<>();
+        try{
+            st = conn.prepareStatement("SELECT id_receita FROM receita where id_usuario = ?");
+            st.setInt(1,autor.getId());
+            rs = st.executeQuery();
+            rs = st.executeQuery();
+            while (rs.next()){
+                Receita receita = findById(rs.getInt("id_receita"));
+                listaReceitas.add(receita);
+            }
+            return listaReceitas;
+        }catch (SQLException e ){
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+    }
 }

@@ -1,9 +1,9 @@
 package application;
 
-import view.IniciarPrograma;
+import view.Programa;
 
 public class Main {
     public static void main(String[] args) {
-        IniciarPrograma.iniciar();
+        Programa.iniciar();
     }
 }

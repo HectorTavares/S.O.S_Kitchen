@@ -32,7 +32,8 @@ public class MenuInicial {
                    TelaReceitas.menuPesquisa();
                     break;
                 case "2":
-                    TelaReceitas.cadastroReceita();
+                    TelaCadastroReceitas telaCadastroReceitas = new TelaCadastroReceitas(usuarioLogado);
+                    TelaCadastroReceitas.cadastroReceitaMenu();
                     break;
                 case "3":
                     TelaConta telaConta = new TelaConta(usuarioLogado);
@@ -49,7 +50,7 @@ public class MenuInicial {
 
             }
         }while(!escolhido);
-        TelaLogin.telaEscolhaLogin();
 
     }
+
 }
