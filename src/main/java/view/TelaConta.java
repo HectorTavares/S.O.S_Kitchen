@@ -15,9 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TelaConta extends MenuInicial {
+public class TelaConta {
+    private final Usuario usuarioLogado;
     public TelaConta(Usuario usuarioLogado) {
-        super(usuarioLogado);
+        this.usuarioLogado = usuarioLogado;
     }
 
     public void alterarDadosConta() {

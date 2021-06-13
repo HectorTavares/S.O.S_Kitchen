@@ -154,7 +154,46 @@ public class Receita {
         return avalicaoMedia;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Receita receita = (Receita) o;
+
+        if (idReceita != receita.idReceita) return false;
+        if (Double.compare(receita.avalicaoMedia, avalicaoMedia) != 0) return false;
+        if (nome != null ? !nome.equals(receita.nome) : receita.nome != null) return false;
+        if (tempoPreparo != null ? !tempoPreparo.equals(receita.tempoPreparo) : receita.tempoPreparo != null)
+            return false;
+        if (sequenciaPreparo != null ? !sequenciaPreparo.equals(receita.sequenciaPreparo) : receita.sequenciaPreparo != null)
+            return false;
+        if (data_Cadastro != null ? !data_Cadastro.equals(receita.data_Cadastro) : receita.data_Cadastro != null)
+            return false;
+        if (data_Edicao != null ? !data_Edicao.equals(receita.data_Edicao) : receita.data_Edicao != null) return false;
+        if (autor != null ? !autor.equals(receita.autor) : receita.autor != null) return false;
+        if (concessorDePermissao != null ? !concessorDePermissao.equals(receita.concessorDePermissao) : receita.concessorDePermissao != null)
+            return false;
+        return ingredientes != null ? ingredientes.equals(receita.ingredientes) : receita.ingredientes == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = idReceita;
+        result = 31 * result + (nome != null ? nome.hashCode() : 0);
+        result = 31 * result + (tempoPreparo != null ? tempoPreparo.hashCode() : 0);
+        result = 31 * result + (sequenciaPreparo != null ? sequenciaPreparo.hashCode() : 0);
+        result = 31 * result + (data_Cadastro != null ? data_Cadastro.hashCode() : 0);
+        result = 31 * result + (data_Edicao != null ? data_Edicao.hashCode() : 0);
+        result = 31 * result + (autor != null ? autor.hashCode() : 0);
+        result = 31 * result + (concessorDePermissao != null ? concessorDePermissao.hashCode() : 0);
+        result = 31 * result + (ingredientes != null ? ingredientes.hashCode() : 0);
+        temp = Double.doubleToLongBits(avalicaoMedia);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 
     public void setAvalicaoMedia(){
         Connection conn = DB.getConnection();

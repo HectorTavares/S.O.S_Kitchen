@@ -6,9 +6,16 @@ import java.util.Scanner;
 
 public class MenuInicial {
     protected final Usuario usuarioLogado;
+    protected final TelaConta telaConta ;
+    protected final TelaReceitas telaReceitas;
+    protected final TelaCadastroReceitas telaCadastroReceitas;
 
     public MenuInicial(Usuario usuarioLogado){
         this.usuarioLogado=usuarioLogado;
+        this.telaConta = new TelaConta(usuarioLogado);
+        this.telaReceitas = new TelaReceitas(usuarioLogado);
+        this.telaCadastroReceitas = new TelaCadastroReceitas(usuarioLogado);
+        //iniciar todas as telas e arrumar metodos staticos
     }
 
     public void menuInicial() {
@@ -29,18 +36,17 @@ public class MenuInicial {
             String escolha = teclado.nextLine();
             switch (escolha){
                 case "1":
-                   TelaReceitas.menuPesquisa();
+                   telaReceitas.menuPesquisa();
                     break;
                 case "2":
-                    TelaCadastroReceitas telaCadastroReceitas = new TelaCadastroReceitas(usuarioLogado);
-                    TelaCadastroReceitas.cadastroReceitaMenu();
+
+                    telaCadastroReceitas.cadastroReceitaMenu();
                     break;
                 case "3":
-                    TelaConta telaConta = new TelaConta(usuarioLogado);
                     telaConta.alterarDadosConta();
                     break;
                 case "4":
-                    TelaReceitas.minhasReceitas();
+                    telaReceitas.minhasReceitas();
                     break;
                 case "0":
                     escolhido = true;

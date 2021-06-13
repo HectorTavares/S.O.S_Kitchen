@@ -9,6 +9,7 @@ import model.entities.Receita;
 import model.entities.Usuario;
 import util.ConversaoDeData;
 import util.FormatadorString;
+import util.VerificadorDeRepeticao;
 
 import java.sql.*;
 import java.sql.Date;
@@ -309,7 +310,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 listaReceitas.add(receita);
             }
 
-            return listaReceitas;
+            return VerificadorDeRepeticao.verificarRepeticao(listaReceitas);
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
@@ -330,7 +331,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                     " ON r.id_usuario = u.id_usuario WHERE p.id_ingrediente = ");
 
             for (Ingrediente ignored :listaIngredientes) {
-                sql.append(" ? or p.ingrediente =  ");
+                sql.append(" ? or p.id_ingrediente =  ");
             }
 
             sql = FormatadorString.removedorDeEspacosOr(sql);
@@ -347,8 +348,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 Receita receita = findById(rs.getInt("id_receita"));
                 listaReceitas.add(receita);
             }
-
-            return listaReceitas;
+            return VerificadorDeRepeticao.verificarRepeticao(listaReceitas);
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
@@ -391,7 +391,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 receita.setIngredientes(listaIngrediente);
                 listaReceitas.add(receita);
             }
-            return listaReceitas;
+            return VerificadorDeRepeticao.verificarRepeticao(listaReceitas);
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
@@ -414,7 +414,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 Receita receita = findById(rs.getInt("id_receita"));
                 listaReceitas.add(receita);
             }
-            return listaReceitas;
+            return VerificadorDeRepeticao.verificarRepeticao(listaReceitas);
         }catch (SQLException e ){
             throw new DbException(e.getMessage());
         } finally {

@@ -7,6 +7,7 @@ import model.entities.Receita;
 import model.entities.Usuario;
 import org.junit.Test;
 import util.FormatadorString;
+import util.VerificadorDeRepeticao;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -67,7 +68,7 @@ public class ReceitaDaoJDBCTest {
     public void deveExcluirReceitaDeIdInformado() {
         Connection conn = DB.getConnection();
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        receitaDao.deleteById(7);
+        receitaDao.deleteById(12);
     }
 
     @Test
@@ -129,8 +130,20 @@ public class ReceitaDaoJDBCTest {
         List<Ingrediente> ingredientes = new ArrayList<>();
         ingredientes.add(new Ingrediente(9, "crack"));
         ingredientes.add(new Ingrediente(8,"corneas"));
+        ingredientes.add(new Ingrediente(1,"ovo"));
+        ingredientes.add(new Ingrediente(2,"leite"));
+        ingredientes.add(new Ingrediente(3,"acucar"));
+        ingredientes.add(new Ingrediente(4,"leite condensado"));
+        ingredientes.add(new Ingrediente(5,"batata"));
+        ingredientes.add(new Ingrediente(6,"gema"));
+        ingredientes.add(new Ingrediente(7,"pilula"));
 
-        System.out.println(receitaDao.findByAllIngredientes(ingredientes));
+
+        List<Receita> a = receitaDao.findByAllIngredientes(ingredientes);
+        System.out.println(a);
+        System.out.println("--------------------------------------------");
+        a = VerificadorDeRepeticao.verificarRepeticao(a);
+        System.out.println(a);
     }
 
     @Test

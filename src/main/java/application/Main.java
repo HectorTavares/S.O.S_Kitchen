@@ -7,3 +7,7 @@ public class Main {
         Programa.iniciar();
     }
 }
+/*
+Na parte de avaliação, consultar o banco, se já tiver avaliacao com id da
+ receita e do usuario rodar um update,else rodar um insert
+ */

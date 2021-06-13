@@ -23,7 +23,7 @@ public class FormatadorString {
     public static StringBuilder removedorDeEspacosOr(StringBuilder palavra){
         int inicio = palavra.lastIndexOf("o");
         int termino = palavra.lastIndexOf("=");
-        palavra.replace(inicio,termino,"");
+        palavra.replace(inicio,termino+1,"");
         return palavra;
     }
 

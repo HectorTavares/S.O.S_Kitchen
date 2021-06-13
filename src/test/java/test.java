@@ -10,4 +10,8 @@ public class test {
         Scanner a = new Scanner(System.in);
         int b= a.nextInt();
     }
+    @Test
+    public void testaMetodo(){
+
+    }
 }
