@@ -210,6 +210,11 @@ public class Receita {
         return data_Cadastro;
     }
 
+    public String mostrarSolicitacao(){
+        return "Nome da Receita: "+nome+"\n"+
+                "Autor : "+autor.nome+ "\n";
+    }
+
     public String imprimir(){
         return "Nome da Receita : "+ nome +"\n"+
                 "Ultima modificação :"+ ultimaModificacao()+"\n"+

@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class TelaLogin {
 
-    public static void telaLoginUsuario() {
+    public static void telaLoginUsuario() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         Usuario usuarioLogado;
         boolean logado;
@@ -41,7 +41,7 @@ public class TelaLogin {
         //
     }
 
-    public static void telaEscolhaLogin() {
+    public static void telaEscolhaLogin() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         boolean escolhido = false;
         do {
@@ -77,7 +77,7 @@ public class TelaLogin {
         } while (escolhido);
     }
 
-    private static void telaLoginAdministrador() {
+    private static void telaLoginAdministrador() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         Administrador adm = new Administrador();
         String login;
@@ -107,7 +107,7 @@ public class TelaLogin {
         //
     }
 
-    public static void criarConta() {
+    public static void criarConta() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
 
         boolean cadastrado = false;

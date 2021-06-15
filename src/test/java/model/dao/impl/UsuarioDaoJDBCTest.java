@@ -1,6 +1,8 @@
-package model.dao;
+package model.dao.impl;
 
 import db.DB;
+import model.dao.DaoFactory;
+import model.dao.UsuarioDao;
 import model.entities.Usuario;
 import org.junit.Test;
 

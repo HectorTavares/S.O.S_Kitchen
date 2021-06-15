@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IngredienteDaoJDBC implements IngredienteDao {
-    private Connection conn;
+    private final Connection conn;
 
     public IngredienteDaoJDBC(Connection conn) {
         this.conn=conn;
@@ -39,6 +39,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
             if (rowsAffected > 0) {
                 ResultSet rs = st.getGeneratedKeys();
                 if (rs.next()) {
+                    System.out.println("Ingrediente Cadastrado com sucesso!");
                     int id = rs.getInt(1);
                     obj.setIdIngrediente(id);
                 }
@@ -117,8 +118,8 @@ public class IngredienteDaoJDBC implements IngredienteDao {
 
     @Override
     public Ingrediente findById(Integer id) {
-        PreparedStatement st = null;
-        ResultSet rs = null;
+        PreparedStatement st;
+        ResultSet rs;
         try{
             st= conn.prepareStatement("SELECT*FROM ingrediente WHERE id_ingrediente = ?");
             st.setInt(1,id);

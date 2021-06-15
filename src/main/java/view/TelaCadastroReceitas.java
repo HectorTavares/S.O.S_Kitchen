@@ -4,6 +4,7 @@ import db.DB;
 import model.dao.DaoFactory;
 import model.dao.IngredienteDao;
 import model.dao.ReceitaDao;
+import model.dao.SolicitacaoReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.entities.Usuario;
@@ -17,9 +18,11 @@ import java.util.Scanner;
 public class TelaCadastroReceitas {
 
     private final Usuario usuarioLogado;
+    private final CadastroIngredientes cadastroIngredientes;
 
     public TelaCadastroReceitas(Usuario usuarioLogado) {
         this.usuarioLogado = usuarioLogado;
+        this.cadastroIngredientes = new CadastroIngredientes();
     }
 
     public void cadastroReceitaMenu() {
@@ -79,6 +82,37 @@ public class TelaCadastroReceitas {
             System.out.println(i + " - " + todosIngredientes.get(i));
             System.out.println("-----------------------------------------------------------------------");
         }
+        System.out.println("A sua receita precisa de ingredientes que não foram listados acima?\n" +
+                "(S/N)");
+        String precisaIngredientes = teclado.next();
+        boolean continuar = true;
+        while(continuar)
+        switch (precisaIngredientes){
+            case "s":
+            case "S":
+                System.out.println("Quantos ingredientes faltaram?");
+                int quantidade= teclado.nextInt();
+                for (int i=1;i<=quantidade;i++){
+                cadastroIngredientes.cadastrarIngredientes();
+                }
+                todosIngredientes=ingredienteDao.findAll();
+                for (int i = 0; i < todosIngredientes.size(); i++) {
+                    System.out.println("-----------------------------------------------------------------------");
+                    System.out.println(i + " - " + todosIngredientes.get(i));
+                    System.out.println("-----------------------------------------------------------------------");
+                }
+                continuar = false;
+                break;
+            case "N":
+            case "n":
+                System.out.println("Então somente siga as proximas instruções!");
+                continuar = false;
+                break;
+            default:
+                System.out.println("Digite algo válido.");
+                precisaIngredientes = teclado.next();
+                continuar = true;
+        }
         System.out.println("Escolha ingredientes diferentes.");
         for (int i = 1; i <= quantidadeIngredientes; i++) {
             try {
@@ -93,8 +127,8 @@ public class TelaCadastroReceitas {
 
         pedidoReceita.setIngredientes(ingredientesEscolhidos);
 
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        receitaDao.insertToAvaliation(pedidoReceita);
+        SolicitacaoReceitaDao solicitacaoReceitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
+        solicitacaoReceitaDao.insert(pedidoReceita);
 
     }
 

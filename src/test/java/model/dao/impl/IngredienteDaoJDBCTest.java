@@ -1,7 +1,9 @@
-package model.dao;
+package model.dao.impl;
 
 import db.DB;
 
+import model.dao.DaoFactory;
+import model.dao.IngredienteDao;
 import model.entities.Ingrediente;
 import org.junit.Test;
 

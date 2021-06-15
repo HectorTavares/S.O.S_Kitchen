@@ -1,6 +1,9 @@
-package model.dao;
+package model.dao.impl;
 
 import db.DB;
+import model.dao.DaoFactory;
+import model.dao.ReceitaDao;
+import model.dao.SolicitacaoReceitaDao;
 import model.entities.Administrador;
 import model.entities.Ingrediente;
 import model.entities.Receita;
@@ -20,17 +23,17 @@ public class ReceitaDaoJDBCTest {
         Connection conn = DB.getConnection();
         Receita a = new Receita();
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        a.setNome("doce ocular");
+        a.setNome("teste teste");
         a.setTempoPreparo("230");
-        a.setSequenciaPreparo("bota na lata3.");
+        a.setSequenciaPreparo("bota na lata.");
         a.setData_Cadastro(LocalDate.now());
         a.setAutor(new Usuario(1, "remor", "cabecudos", "remor"));
         List<Ingrediente> ingredientes = new ArrayList<>();
         a.setConcessorDePermissao(new Administrador(1, "hector", "hector", "hector"));
 
-        ingredientes.add(new Ingrediente(9, "crack"));
-        ingredientes.add(new Ingrediente(8, "corneas"));
-        ingredientes.add(new Ingrediente(4,"leite condensado"));
+        ingredientes.add(new Ingrediente(9, "teste"));
+        ingredientes.add(new Ingrediente(8, "teste"));
+        ingredientes.add(new Ingrediente(4,"teste teste"));
 
 
         a.setIngredientes(ingredientes);
@@ -44,7 +47,7 @@ public class ReceitaDaoJDBCTest {
     public void deveRegistarUmPedidoDeReceitaNoBanco(){
         Connection conn = DB.getConnection();
         Receita a = new Receita();
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
+        SolicitacaoReceitaDao receitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
         a.setTempoPreparo("20000");
 
         a.setSequenciaPreparo("Cortar frango em posições quadriculadas, colcoar na panela em alta temperatura ...");
@@ -54,13 +57,13 @@ public class ReceitaDaoJDBCTest {
         List<Ingrediente> ingredientes = new ArrayList<>();
         a.setConcessorDePermissao(new Administrador(1, "hector", "hector", "hector"));
 
-        ingredientes.add(new Ingrediente(6, "Acucar"));
-        ingredientes.add(new Ingrediente(3, "alho"));
-        ingredientes.add(new Ingrediente(5,"leite"));
-        ingredientes.add(new Ingrediente(8,"OVo"));
+        ingredientes.add(new Ingrediente(6, "teste"));
+        ingredientes.add(new Ingrediente(3, "teste"));
+        ingredientes.add(new Ingrediente(5,"teste"));
+        ingredientes.add(new Ingrediente(8,"teste"));
 
         a.setIngredientes(ingredientes);
-        receitaDao.insertToAvaliation(a);
+        receitaDao.insert(a);
 
     }
 
@@ -84,7 +87,7 @@ public class ReceitaDaoJDBCTest {
     public void deveInserirRegistroNaTabelaDeAvaliacaoDeReceita(){
         Connection conn = DB.getConnection();
         Receita a = new Receita();
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
+        SolicitacaoReceitaDao receitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
         a.setNome("Frango Gostosinho");
         a.setTempoPreparo("20 pras 2");
         a.setSequenciaPreparo("Cortar frango");
@@ -92,11 +95,11 @@ public class ReceitaDaoJDBCTest {
         a.setAutor(new Usuario(1, "remor", "cabecudos", "remor"));
         List<Ingrediente> ingredientes = new ArrayList<>();
         a.setConcessorDePermissao(new Administrador(1, "hector", "hector", "hector"));
-        ingredientes.add(new Ingrediente(6, "acucar"));
-        ingredientes.add(new Ingrediente(3, "Alho"));
-        ingredientes.add(new Ingrediente(1, "Banana"));
+        ingredientes.add(new Ingrediente(6, "teste"));
+        ingredientes.add(new Ingrediente(3, "teste"));
+        ingredientes.add(new Ingrediente(1, "teste"));
         a.setIngredientes(ingredientes);
-        receitaDao.insertToAvaliation(a);
+        receitaDao.insert(a);
         System.out.println("Receita Cadastrada, Confira no banco");
     }
 
@@ -111,7 +114,7 @@ public class ReceitaDaoJDBCTest {
     public void testeDoFindByName(){
         Connection conn = DB.getConnection();
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        System.out.println(receitaDao.findByName("batata"));
+        System.out.println(receitaDao.findByName("teste"));
     }
 
     @Test
@@ -119,7 +122,7 @@ public class ReceitaDaoJDBCTest {
         Connection conn = DB.getConnection();
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Ingrediente> ingredientes = new ArrayList<>();
-        ingredientes.add(new Ingrediente(1, "ovo"));
+        ingredientes.add(new Ingrediente(1, "teste"));
         System.out.println(receitaDao.findByAllIngredientes(ingredientes));
     }
 
@@ -128,15 +131,15 @@ public class ReceitaDaoJDBCTest {
         Connection conn = DB.getConnection();
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Ingrediente> ingredientes = new ArrayList<>();
-        ingredientes.add(new Ingrediente(9, "crack"));
-        ingredientes.add(new Ingrediente(8,"corneas"));
-        ingredientes.add(new Ingrediente(1,"ovo"));
-        ingredientes.add(new Ingrediente(2,"leite"));
-        ingredientes.add(new Ingrediente(3,"acucar"));
-        ingredientes.add(new Ingrediente(4,"leite condensado"));
-        ingredientes.add(new Ingrediente(5,"batata"));
-        ingredientes.add(new Ingrediente(6,"gema"));
-        ingredientes.add(new Ingrediente(7,"pilula"));
+        ingredientes.add(new Ingrediente(9, "teste"));
+        ingredientes.add(new Ingrediente(8,"teste"));
+        ingredientes.add(new Ingrediente(1,"teste"));
+        ingredientes.add(new Ingrediente(2,"teste"));
+        ingredientes.add(new Ingrediente(3,"teste"));
+        ingredientes.add(new Ingrediente(4,"teste teste"));
+        ingredientes.add(new Ingrediente(5,"teste"));
+        ingredientes.add(new Ingrediente(6,"teste"));
+        ingredientes.add(new Ingrediente(7,"teste"));
 
 
         List<Receita> a = receitaDao.findByAllIngredientes(ingredientes);
@@ -144,12 +147,6 @@ public class ReceitaDaoJDBCTest {
         System.out.println("--------------------------------------------");
         a = VerificadorDeRepeticao.verificarRepeticao(a);
         System.out.println(a);
-    }
-
-    @Test
-    public void testeFormatacao(){
-        String a = "colocaR Na Panela DE PRESSao.junto DO BB";
-        System.out.println(FormatadorString.formatarFrase(a));
     }
 
 }

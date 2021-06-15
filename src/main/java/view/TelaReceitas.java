@@ -8,10 +8,10 @@ import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.entities.Usuario;
 import util.FormatadorString;
+import util.Sleep;
 
 import java.sql.Connection;
-import java.sql.SQLOutput;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,13 +19,14 @@ import java.util.Scanner;
 public class TelaReceitas {
 
     private final Usuario usuarioLogado;
+    private final AvaliacaoReceita telaAvaliacaoReceita;
 
     public TelaReceitas(Usuario usuarioLogado) {
         this.usuarioLogado = usuarioLogado;
-
+        this.telaAvaliacaoReceita = new AvaliacaoReceita(usuarioLogado);
     }
 
-    public void menuPesquisa() {
+    public void menuPesquisa() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         boolean escolhido = false;
         do {
@@ -58,11 +59,11 @@ public class TelaReceitas {
 
     }
 
-    private void mostrarTodasReceitas() {
+    private void mostrarTodasReceitas() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         Connection conn = DB.getConnection();
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        List<Receita> resultadosDaPesquisa = new ArrayList<>();
+        List<Receita> resultadosDaPesquisa;
         resultadosDaPesquisa = receitaDao.findAll();
         boolean continuar = true;
         do {
@@ -74,21 +75,25 @@ public class TelaReceitas {
                 System.out.println(i + " - " + resultadosDaPesquisa.get(i));
                 System.out.println("-----------------------------------------------------------------------");
             }
+            Thread.sleep(1000);
             System.out.println("-----------------------------------------------------------------------");
-            for (int i=0;i<1;i++){
-                try{
+            for (int i = 0; i < 1; i++) {
+                try {
                     System.out.println("Escolha a Receita de sua preferência: ");
                     int escolhido = teclado.nextInt();
                     System.out.println("-----------------------------------------------------------------------");
                     System.out.println(resultadosDaPesquisa.get(escolhido).imprimir());
                     System.out.println("-----------------------------------------------------------------------");
-                }catch (IndexOutOfBoundsException e){
+                    Sleep.sleep();
+                    telaAvaliacaoReceita.setReceitaAvaliada(resultadosDaPesquisa.get(escolhido));
+                    telaAvaliacaoReceita.avaliarReceita();
+                } catch (IndexOutOfBoundsException e) {
                     System.out.println("Digitar Numero de Receita existente!");
                     i--;
                 }
             }
 
-
+            Thread.sleep(1000);
             System.out.println("-----------------------------------------------------------------------");
             System.out.println("Quer ver outra Receita da lista?\n" +
                     "S/N");
@@ -111,14 +116,14 @@ public class TelaReceitas {
     }
 
 
-    public void minhasReceitas() {
+    public void minhasReceitas() throws InterruptedException {
         Connection conn = DB.getConnection();
         Scanner teclado = new Scanner(System.in);
         boolean continuar = true;
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Receita> minhasReceitas = new ArrayList<>(receitaDao.findAllByAutor(usuarioLogado));
         do {
-            if (minhasReceitas.size() >= 1) {
+            if (!minhasReceitas.isEmpty()) {
                 for (int i = 0; i < minhasReceitas.size(); i++) {
                     System.out.println("-----------------------------------------------------------------------");
                     System.out.println(i + " - " + minhasReceitas.get(i));
@@ -131,7 +136,8 @@ public class TelaReceitas {
                 System.out.println("-----------------------------------------------------------------------");
                 System.out.println(minhasReceitas.get(escolhido).imprimir());
                 System.out.println("-----------------------------------------------------------------------");
-
+                telaAvaliacaoReceita.setReceitaAvaliada(minhasReceitas.get(escolhido));
+                telaAvaliacaoReceita.avaliarReceita();
 
                 System.out.println("-----------------------------------------------------------------------");
                 System.out.println("Quer ver outra Receita da lista?\n" +
@@ -152,16 +158,15 @@ public class TelaReceitas {
                         System.out.println("Digite algo válido.");
                 }
             } else {
-                System.out.println("Você não tem nenhuma receita cadastrda ainda, tente cadastrar alguma.");
+                Sleep.sleep();
+                System.out.println("Você não tem nenhuma receita cadastrada ainda, tente cadastrar alguma.");
                 continuar = false;
+                Thread.sleep(1000);
             }
-
-
         } while (continuar);
-
     }
 
-    public void pesquisaPorNome() {
+    public void pesquisaPorNome() throws InterruptedException {
         Connection conn = DB.getConnection();
         Scanner teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
@@ -171,58 +176,66 @@ public class TelaReceitas {
         System.out.println("-----------------------------------------------------------------------");
         String palavraPesquisada = teclado.nextLine();
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        List<Receita> resultadosDaPesquisa = new ArrayList<>();
+        List<Receita> resultadosDaPesquisa;
         resultadosDaPesquisa = receitaDao.findByName(palavraPesquisada);
-        boolean continuar = true;
-        do {
-            System.out.println("Resultados da Pesquisa : ");
-            for (int i = 0; i < resultadosDaPesquisa.size(); i++) {
+        if (resultadosDaPesquisa.isEmpty()) {
+            System.out.println("Nenhuma receita encontrada");
+            Thread.sleep(1500);
+        } else {
+            boolean continuar = true;
+            do {
+                System.out.println("Resultados da Pesquisa : ");
+                for (int i = 0; i < resultadosDaPesquisa.size(); i++) {
+                    System.out.println("-----------------------------------------------------------------------");
+                    System.out.println(i + " - " + resultadosDaPesquisa.get(i));
+                    System.out.println("-----------------------------------------------------------------------");
+                }
+
+                System.out.println("Escolha a Receita de sua preferência: ");
+                int escolhido = teclado.nextInt();
                 System.out.println("-----------------------------------------------------------------------");
-                System.out.println(i + " - " + resultadosDaPesquisa.get(i));
+                System.out.println(resultadosDaPesquisa.get(escolhido).imprimir());
                 System.out.println("-----------------------------------------------------------------------");
-            }
+                Sleep.sleep();
+                telaAvaliacaoReceita.setReceitaAvaliada(resultadosDaPesquisa.get(escolhido));
+                telaAvaliacaoReceita.avaliarReceita();
 
+                System.out.println("-----------------------------------------------------------------------");
+                Sleep.sleep();
+                System.out.println("Quer ver outra Receita da lista?\n" +
+                        "S/N");
+                System.out.println("-----------------------------------------------------------------------");
 
-            System.out.println("Escolha a Receita de sua preferência: ");
-            int escolhido = teclado.nextInt();
-            System.out.println("-----------------------------------------------------------------------");
-            System.out.println(resultadosDaPesquisa.get(escolhido).imprimir());
-            System.out.println("-----------------------------------------------------------------------");
-            System.out.println("-----------------------------------------------------------------------");
-            System.out.println("Quer ver outra Receita da lista?\n" +
-                    "S/N");
-            System.out.println("-----------------------------------------------------------------------");
-
-            String resposta = teclado.next();
-            switch (resposta) {
-                case "s":
-                case "S":
-                    continuar = true;
-                    break;
-                case "n":
-                case "N":
-                    continuar = false;
-                    break;
-                default:
-                    System.out.println("Digite algo válido.");
-            }
-        }while (continuar);
-
+                String resposta = teclado.next();
+                switch (resposta) {
+                    case "s":
+                    case "S":
+                        continuar = true;
+                        break;
+                    case "n":
+                    case "N":
+                        continuar = false;
+                        break;
+                    default:
+                        System.out.println("Digite algo válido.");
+                }
+            } while (continuar);
+        }
 
     }
 
-    public void pesquisaPorIngredienteTipo1() {
+    public void pesquisaPorIngredienteTipo1() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         Connection conn = DB.getConnection();
-        List<Receita>resultadoDaPesquisa = new ArrayList<>();
+        List<Receita> resultadoDaPesquisa;
         IngredienteDao ingredienteDao = DaoFactory.createIngredienteDao(conn);
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        List<Ingrediente>ingredientesEscolhidos = new ArrayList<>();
+        List<Ingrediente> ingredientesEscolhidos = new ArrayList<>();
         boolean continuar = true;
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PESQUISA POR INGREDIENTE TIPO 1 ---");
         List<Ingrediente> todosIngredientes = new ArrayList<>(ingredienteDao.findAll());
-        System.out.println("Na sua receita vão quantos ingredientes?");
+        System.out.println("Voce quer realizar a pesquisa com quantos ingredientes?");
         int quantidadeIngredientes = teclado.nextInt();
 
         for (int i = 0; i < todosIngredientes.size(); i++) {
@@ -243,63 +256,71 @@ public class TelaReceitas {
         }
 
         resultadoDaPesquisa = receitaDao.findByAllIngredientes(ingredientesEscolhidos);
-
-        do {
-            System.out.println("Resultados da Pesquisa : ");
-            for (int i = 0; i < resultadoDaPesquisa.size(); i++) {
-                System.out.println("-----------------------------------------------------------------------");
-                System.out.println(i + " - " + resultadoDaPesquisa.get(i));
-                System.out.println("-----------------------------------------------------------------------");
-            }
-
-
-            for (int i=0;i<1;i++){
-                try{
-                    System.out.println("Escolha a Receita de sua preferência: ");
-                    int escolhido = teclado.nextInt();
+        if (resultadoDaPesquisa.isEmpty()) {
+            System.out.println("Nenhuma receita encontrada com os requisitos da pesquisa!");
+            Sleep.sleep();
+        } else {
+            do {
+                System.out.println("Resultados da Pesquisa : ");
+                for (int i = 0; i < resultadoDaPesquisa.size(); i++) {
                     System.out.println("-----------------------------------------------------------------------");
-                    System.out.println(resultadoDaPesquisa.get(escolhido).imprimir());
+                    System.out.println(i + " - " + resultadoDaPesquisa.get(i));
                     System.out.println("-----------------------------------------------------------------------");
-                }catch (IndexOutOfBoundsException e){
-                    System.out.println("Digitar Numero de Receita existente!");
-                    i--;
                 }
-            }
 
-            System.out.println("-----------------------------------------------------------------------");
-            System.out.println("Quer ver outra Receita da lista?\n" +
-                    "S/N");
-            System.out.println("-----------------------------------------------------------------------");
 
-            String resposta = teclado.next();
-            switch (resposta) {
-                case "s":
-                case "S":
-                    continuar = true;
-                    break;
-                case "n":
-                case "N":
-                    continuar = false;
-                    break;
-                default:
-                    System.out.println("Digite algo válido.");
-            }
-        }while (continuar);
+                for (int i = 0; i < 1; i++) {
+                    try {
+                        System.out.println("Escolha a Receita de sua preferência: ");
+                        int escolhido = teclado.nextInt();
+                        System.out.println("-----------------------------------------------------------------------");
+                        System.out.println(resultadoDaPesquisa.get(escolhido).imprimir());
+                        System.out.println("-----------------------------------------------------------------------");
+                        Sleep.sleep();
+                        telaAvaliacaoReceita.setReceitaAvaliada(resultadoDaPesquisa.get(escolhido));
+                        telaAvaliacaoReceita.avaliarReceita();
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Digitar Numero de Receita existente!");
+                        i--;
+                    }
+                }
+                Sleep.sleep();
+                System.out.println("-----------------------------------------------------------------------");
+                System.out.println("Quer ver outra Receita da lista?\n" +
+                        "S/N");
+                System.out.println("-----------------------------------------------------------------------");
+
+                String resposta = teclado.next();
+                switch (resposta) {
+                    case "s":
+                    case "S":
+                        continuar = true;
+                        break;
+                    case "n":
+                    case "N":
+                        continuar = false;
+                        break;
+                    default:
+                        System.out.println("Digite algo válido.");
+                }
+            } while (continuar);
+        }
+
 
     }
 
-    public void pesquisaPorIngredienteTipo2() {
+    public void pesquisaPorIngredienteTipo2() throws InterruptedException {
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PESQUISA POR INGREDIENTE TIPO 2 ---");
         Scanner teclado = new Scanner(System.in);
         Connection conn = DB.getConnection();
-        List<Receita>resultadoDaPesquisa = new ArrayList<>();
+        List<Receita> resultadoDaPesquisa;
         IngredienteDao ingredienteDao = DaoFactory.createIngredienteDao(conn);
         ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
-        List<Ingrediente>ingredientesEscolhidos = new ArrayList<>();
+        List<Ingrediente> ingredientesEscolhidos = new ArrayList<>();
         boolean continuar = true;
         List<Ingrediente> todosIngredientes = new ArrayList<>(ingredienteDao.findAll());
-        System.out.println("Na sua receita vão quantos ingredientes?");
+        System.out.println("Voce quer realizar a pesquisa com quantos ingredientes?");
         int quantidadeIngredientes = teclado.nextInt();
 
         for (int i = 0; i < todosIngredientes.size(); i++) {
@@ -320,51 +341,58 @@ public class TelaReceitas {
         }
 
         resultadoDaPesquisa = receitaDao.findByIngredientes(ingredientesEscolhidos);
-
-        do {
-            System.out.println("Resultados da Pesquisa : ");
-            for (int i = 0; i < resultadoDaPesquisa.size(); i++) {
-                System.out.println("-----------------------------------------------------------------------");
-                System.out.println(i + " - " + resultadoDaPesquisa.get(i));
-                System.out.println("-----------------------------------------------------------------------");
-            }
-
-            for (int i=0;i<1;i++){
-                try{
-                    System.out.println("Escolha a Receita de sua preferência: ");
-                    int escolhido = teclado.nextInt();
+        if (resultadoDaPesquisa.isEmpty()) {
+            System.out.println("Nenhuma receita encontrada com os requisitos da pesquisa!");
+            Sleep.sleep();
+        } else {
+            do {
+                System.out.println("Resultados da Pesquisa : ");
+                for (int i = 0; i < resultadoDaPesquisa.size(); i++) {
                     System.out.println("-----------------------------------------------------------------------");
-                    System.out.println(resultadoDaPesquisa.get(escolhido).imprimir());
+                    System.out.println(i + " - " + resultadoDaPesquisa.get(i));
                     System.out.println("-----------------------------------------------------------------------");
-                }catch (IndexOutOfBoundsException e){
-                    System.out.println("Digitar Numero de Receita existente!");
-                    i--;
                 }
-            }
 
-            System.out.println("-----------------------------------------------------------------------");
-            System.out.println("Quer ver outra Receita da lista?\n" +
-                    "S/N");
-            System.out.println("-----------------------------------------------------------------------");
+                for (int i = 0; i < 1; i++) {
+                    try {
+                        System.out.println("Escolha a Receita de sua preferência: ");
+                        int escolhido = teclado.nextInt();
+                        System.out.println("-----------------------------------------------------------------------");
+                        System.out.println(resultadoDaPesquisa.get(escolhido).imprimir());
 
-            String resposta = teclado.next();
-            switch (resposta) {
-                case "s":
-                case "S":
-                    continuar = true;
-                    break;
-                case "n":
-                case "N":
-                    continuar = false;
-                    break;
-                default:
-                    System.out.println("Digite algo válido.");
-            }
-        }while (continuar);
-        System.out.println("em desenvolvimento");
+                        System.out.println("-----------------------------------------------------------------------");
+                        Sleep.sleep();
+                        telaAvaliacaoReceita.setReceitaAvaliada(resultadoDaPesquisa.get(escolhido));
+                        telaAvaliacaoReceita.avaliarReceita();
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Digitar Numero de Receita existente!");
+                        i--;
+                    }
+                }
+                Sleep.sleep();
+                System.out.println("-----------------------------------------------------------------------");
+                System.out.println("Quer ver outra Receita da lista?\n" +
+                        "S/N");
+                System.out.println("-----------------------------------------------------------------------");
+
+                String resposta = teclado.next();
+                switch (resposta) {
+                    case "s":
+                    case "S":
+                        continuar = true;
+                        break;
+                    case "n":
+                    case "N":
+                        continuar = false;
+                        break;
+                    default:
+                        System.out.println("Digite algo válido.");
+                }
+            } while (continuar);
+        }
     }
 
-    public void pesquisarPorIngredientesMenu() {
+    public void pesquisarPorIngredientesMenu() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PESQUISA POR INGREDIENTES ---");
@@ -380,10 +408,12 @@ public class TelaReceitas {
         FormatadorString.formatarPalavra(escolha);
 
         switch (escolha) {
+            case "Type 1":
             case "Tipo 1":
             case "1":
                 pesquisaPorIngredienteTipo1();
                 break;
+            case "Type 2":
             case "Tipo 2":
             case "2":
                 pesquisaPorIngredienteTipo2();

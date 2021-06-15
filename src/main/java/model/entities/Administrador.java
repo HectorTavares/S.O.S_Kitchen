@@ -10,9 +10,11 @@ import java.sql.Connection;
 public class Administrador extends Usuario {
     public Administrador(int id, String nome, String senha, String login) {
         super(id, nome, senha, login);
+        setNivelAcesso(NivelAcesso.ADM);
     }
     public Administrador(){
         super();
+        setNivelAcesso(NivelAcesso.ADM);
     }
 
     public static boolean consegueLogar(String login, String senha){

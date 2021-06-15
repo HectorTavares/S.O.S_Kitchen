@@ -82,6 +82,25 @@ public class UsuarioDaoJDBC implements UsuarioDao{
     }
 
     @Override
+    public void desativeById(Integer id){
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement("UPDATE usuario SET ativo = false WHERE id_usuario = ?");
+
+            st.setInt(1, id);
+
+            st.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
+
+    }
+
+    @Override
     public void deleteById(Integer id) {
         PreparedStatement st = null;
         try {
@@ -139,7 +158,7 @@ public class UsuarioDaoJDBC implements UsuarioDao{
         ResultSet rs = null;
         try {
             st = conn.prepareStatement(
-                    "SELECT * FROM usuario WHERE login = ? AND senha  = ?");
+                    "SELECT * FROM usuario WHERE login = ? AND senha  = ? AND ativo = true;");
             st.setString(1, login);
             st.setString(2,senha);
             rs = st.executeQuery();

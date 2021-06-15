@@ -8,4 +8,5 @@ public interface UsuarioDao {
     void deleteById(Integer id);
     Usuario findById(Integer id);
     Usuario findByLoginAndSenha(String login, String senha);
+    void desativeById(Integer id);
 }

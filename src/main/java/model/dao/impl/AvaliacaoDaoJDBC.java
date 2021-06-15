@@ -13,10 +13,11 @@ import db.DbException;
 import model.dao.AvaliacaoDao;
 import model.entities.Avaliacao;
 import model.entities.Receita;
+import model.entities.Usuario;
 
 
 public class AvaliacaoDaoJDBC implements AvaliacaoDao {
-    private Connection conn;
+    private final Connection conn;
 
     public AvaliacaoDaoJDBC(Connection conn) {
         this.conn = conn;
@@ -36,6 +37,7 @@ public class AvaliacaoDaoJDBC implements AvaliacaoDao {
             if (rowsAffected > 0) {
                 ResultSet rs = st.getGeneratedKeys();
                 if (rs.next()) {
+                    System.out.println("Avaliação feita com sucesso!");
                     int id = rs.getInt(1);
                     obj.setId(id);
                 }
@@ -50,6 +52,45 @@ public class AvaliacaoDaoJDBC implements AvaliacaoDao {
         }
     }
 
+    @Override
+    public double findNotaByReceitaAndAvaliador(Receita receitaAvaliada,Usuario avaliador){
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement("SELECT nota FROM avaliacao WHERE id_receita = ? AND id_usuario = ?");
+            st.setInt(1, receitaAvaliada.getIdReceita());
+            st.setInt(2,avaliador.getId());
+            rs = st.executeQuery();
+            if (rs.next()){
+                return rs.getInt("nota");
+            }
+            return 0.00;
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+    }
+
+    @Override
+    public boolean jaAvaliou(Receita receitaAvaliada, Usuario avaliador){
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement("SELECT * FROM avaliacao WHERE id_receita = ? AND id_usuario = ?");
+            st.setInt(1, receitaAvaliada.getIdReceita());
+            st.setInt(2,avaliador.getId());
+            rs = st.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+
+    }
     @Override
     public void administradorAvalia(Avaliacao obj) {
         PreparedStatement st = null;
@@ -86,6 +127,7 @@ public class AvaliacaoDaoJDBC implements AvaliacaoDao {
             st.setInt(2, obj.getAvaliador().getId());
             st.setInt(3, obj.getReceitaAvaliada().getIdReceita());
             st.executeUpdate();
+            System.out.println("Nota alterada com sucesso!");
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {

@@ -9,7 +9,7 @@ import model.entities.Usuario;
 import java.sql.*;
 
 public class AdministadorDaoJDBC implements AdministradorDao {
-    private Connection conn;
+    private final Connection conn;
 
     public AdministadorDaoJDBC(Connection conn) {
         this.conn = conn;
@@ -114,6 +114,7 @@ public class AdministadorDaoJDBC implements AdministradorDao {
 
     @Override
     public void analyzeRecipe() {
+
 
     }
 

@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ReceitaDaoJDBC implements ReceitaDao {
-    private Connection conn;
+    private final Connection conn;
 
     public ReceitaDaoJDBC(Connection conn) {
         this.conn = conn;
@@ -119,62 +119,6 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         }
     } //create
 
-    @Override
-    public void insertToAvaliation(Receita obj) {
-        PreparedStatement st = null;
-        PreparedStatement st2;
-        try {
-            st = conn.prepareStatement("INSERT INTO solicitacao_receita" +
-                            "(nome,tempo_preparo,sequencia_preparo,data_registro,id_usuario,status_solicitacao)" +
-                            "VALUES" +
-                            "(?,?,?,?,?,?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            st.setString(1, obj.getNome());
-            st.setString(2, obj.getTempoPreparo());
-            st.setString(3, obj.getSequenciaPreparo());
-            Date date = ConversaoDeData.localDateToDate(obj.getData_Cadastro());
-            assert date != null;
-            st.setDate(4, new java.sql.Date(date.getTime()));
-            st.setInt(5, obj.getAutor().getId());
-            st.setBoolean(6, false);
-            int rowsAffected = st.executeUpdate();
-            if (rowsAffected > 0) {
-                ResultSet rs = st.getGeneratedKeys();
-                if (rs.next()) {
-                    int id = rs.getInt(1);
-                    obj.setIdReceita(id);
-                    System.out.println("Pedido Cadastrado com Sucesso!");
-                }
-                DB.closeResultSet(rs);
-            } else {
-                throw new DbException("Unexpected error! No rows affected");
-            }
-            for (Ingrediente ingrediente : obj.getIngredientes()) {
-                st2 = conn.prepareStatement("INSERT INTO ingrediente_da_solicitacao_receita" +
-                                "(id_ingrediente,id_solicitacao_receita)" +
-                                "VALUES " +
-                                "(?,?)",
-                        Statement.RETURN_GENERATED_KEYS);
-                st2.setInt(1, ingrediente.getIdIngrediente());
-                st2.setInt(2, obj.getIdReceita());
-                int rowsAffected2 = st2.executeUpdate();
-                if (rowsAffected2 > 0) {
-                    ResultSet rs = st2.getGeneratedKeys();
-                    if (rs.next()) {
-                        int id = rs.getInt(1);
-                        ingrediente.setIdIngrediente(id);
-                    }
-                    DB.closeResultSet(rs);
-                } else {
-                    throw new DbException("Unexpected error! No rows affected");
-                }
-            }
-        } catch (SQLException e) {
-            throw new DbException(e.getMessage());
-        } finally {
-            DB.closeStatement(st);
-        }
-    } //create
 
     @Override
     public Receita findById(Integer id) {
@@ -294,7 +238,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 sql.append(" ? and ");
             }
 
-            sql = FormatadorString.removedorDeEspacosAnd(sql);
+            FormatadorString.removedorDeEspacosAnd(sql);
 
             st = conn.prepareStatement(sql.toString());
             int i = 1;
@@ -334,7 +278,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 sql.append(" ? or p.id_ingrediente =  ");
             }
 
-            sql = FormatadorString.removedorDeEspacosOr(sql);
+            FormatadorString.removedorDeEspacosOr(sql);
 
             st = conn.prepareStatement(sql.toString());
             int i = 1;

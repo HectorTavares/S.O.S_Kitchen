@@ -1,9 +1,12 @@
-package model.dao;
+package model.dao.impl;
 
 import db.DB;
+import model.dao.AvaliacaoDao;
+import model.dao.DaoFactory;
 import model.entities.*;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -85,5 +88,14 @@ public class AvaliacaoDaoJDBCTest extends TestCase {
         AvaliacaoDao avaliacaoDao = DaoFactory.createAvaliacaoDao(conn);
         Receita rceita = new Receita(1);
         System.out.println(avaliacaoDao.findMedia(rceita));
+    }
+
+    public void testeJaAvaliou(){
+        Connection conn = DB.getConnection();
+        AvaliacaoDao avaliacaoDao = DaoFactory.createAvaliacaoDao(conn);
+        Receita receita = new Receita(6);
+        Usuario a =new Usuario(5,"s","s","s");
+        Assert.assertTrue(avaliacaoDao.jaAvaliou(receita,a));
+
     }
 }

@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface ReceitaDao {
     void insert(Receita obj); //create
-    void insertToAvaliation(Receita obj); //create
     void update(Receita obj); //update
     void deleteById(Integer id);  //delete
     List<Receita> findAll();  //read

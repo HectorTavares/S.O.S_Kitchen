@@ -20,5 +20,7 @@ public class DaoFactory {
     public static AvaliacaoDao createAvaliacaoDao(Connection conn){
         return new AvaliacaoDaoJDBC(conn);
     }
-
+    public static SolicitacaoReceitaDao createSolicitacaoReceitaDao(Connection conn){
+        return new SolicitacaoReceitaDaoJDBC(conn);
+    }
 }

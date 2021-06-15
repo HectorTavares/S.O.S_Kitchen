@@ -1,11 +1,9 @@
 package view;
 
 import db.DB;
-import model.dao.DaoFactory;
-import model.dao.IngredienteDao;
-import model.dao.ReceitaDao;
-import model.dao.UsuarioDao;
+import model.dao.*;
 import model.entities.Ingrediente;
+import model.entities.NivelAcesso;
 import model.entities.Receita;
 import model.entities.Usuario;
 
@@ -21,18 +19,21 @@ public class TelaConta {
         this.usuarioLogado = usuarioLogado;
     }
 
-    public void alterarDadosConta() {
+    public void alterarDadosConta() throws InterruptedException {
         Scanner teclado = new Scanner(System.in);
         boolean repetir = true;
         do {
             System.out.println("-----------------------------------------------------------------------");
             System.out.println("---ALTERAR DADOS DA CONTA---");
             System.out.println("Aqui você poderá alterar os dados da sua conta");
-            System.out.println("Quer alterar Qual dado da sua conta? \n" +
+            System.out.print("Quer alterar Qual dado da sua conta? \n" +
                     "0 - Voltar \n" +
                     "1 - Nome \n" +
                     "2 - Senha \n" +
-                    "3 - Login");
+                    "3 - Login\n");
+            if (usuarioLogado.getNivelAcesso()==NivelAcesso.USUARIO){
+                System.out.print("4- Desativar Conta \n");
+            }
             System.out.println("-----------------------------------------------------------------------");
             String resposta = teclado.next();
             switch (resposta) {
@@ -45,6 +46,12 @@ public class TelaConta {
                 case "3":
                     alterarLogin();
                     break;
+                case "4":
+                    if (usuarioLogado.getNivelAcesso()==NivelAcesso.USUARIO){
+                        desativarConta();
+                    }else{
+                        System.out.println("Digite algo válido. ");
+                    }
                 case "0":
                     repetir = false;
                     break;
@@ -52,6 +59,42 @@ public class TelaConta {
                     System.out.println("Digite algo válido.");
             }
         } while (repetir);
+
+    }
+
+    private void desativarConta() throws InterruptedException {
+        Scanner teclado = new Scanner(System.in);
+        Connection conn = DB.getConnection();
+        UsuarioDao usuarioDao = DaoFactory.createUsuarioDao(conn);
+        System.out.println("--- DESATIVAÇÃO DE CONTA ---");
+        System.out.println("Você está ciente que depois de desativar sua conta o aplicativo fechará e \n" +
+                "você não irá mais conseguir utilizar a sua conta. \n" +
+                "Gostaria mesmo de desativar a sua conta? \n" +
+                "s/n");
+        String resposta = teclado.next();
+        switch (resposta) {
+            case "s":
+            case "S":
+                Thread.sleep(1000);
+                System.out.print("Digite sua senha corretamente : ");
+                String senha = teclado.next();
+                if (senha.equals(usuarioLogado.getSenha())){
+                    usuarioDao.desativeById(usuarioLogado.getId());
+                    System.out.println("Usuário Desativado com sucesso.");
+                    Thread.sleep(1000);
+                    System.exit(0);
+                }else{
+                    System.out.println("Senha incorreta.");
+                }
+
+                break;
+            case "n":
+            case "N":
+                System.out.println("Boa escolha, continue utilizando nosso sistema!");
+                break;
+            default:
+                System.out.println("Digite algo válido.");
+        }
     }
 
     private void alterarLogin() {
@@ -62,7 +105,13 @@ public class TelaConta {
         usuarioLogado.setLogin(novoLogin);
         Connection conn = DB.getConnection();
         UsuarioDao usuarioDao = DaoFactory.createUsuarioDao(conn);
-        usuarioDao.update(usuarioLogado);
+        if (usuarioLogado.getNivelAcesso()== NivelAcesso.ADM){
+            AdministradorDao administradorDao = DaoFactory.createAdministradorDao(conn);
+            administradorDao.update(usuarioLogado);
+        }else{
+            usuarioDao.update(usuarioLogado);
+        }
+
     }
 
     private void alterarSenha() {
@@ -73,7 +122,12 @@ public class TelaConta {
         usuarioLogado.setSenha(novaSenha);
         Connection conn = DB.getConnection();
         UsuarioDao usuarioDao = DaoFactory.createUsuarioDao(conn);
-        usuarioDao.update(usuarioLogado);
+        if (usuarioLogado.getNivelAcesso()== NivelAcesso.ADM){
+            AdministradorDao administradorDao = DaoFactory.createAdministradorDao(conn);
+            administradorDao.update(usuarioLogado);
+        }else{
+            usuarioDao.update(usuarioLogado);
+        }
     }
 
     public void alterarNome() {
@@ -84,7 +138,12 @@ public class TelaConta {
         usuarioLogado.setNome(novoNome);
         Connection conn = DB.getConnection();
         UsuarioDao usuarioDao = DaoFactory.createUsuarioDao(conn);
-        usuarioDao.update(usuarioLogado);
+        if (usuarioLogado.getNivelAcesso()== NivelAcesso.ADM){
+            AdministradorDao administradorDao = DaoFactory.createAdministradorDao(conn);
+            administradorDao.update(usuarioLogado);
+        }else{
+            usuarioDao.update(usuarioLogado);
+        }
     }
 
 }
