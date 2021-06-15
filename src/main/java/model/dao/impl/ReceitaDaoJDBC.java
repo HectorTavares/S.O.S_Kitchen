@@ -163,13 +163,14 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         try {
             st = conn.prepareStatement("UPDATE receita " +
                     "SET nome = ?, tempo_preparo = ?, sequencia_preparo =?, data_edicao=? " +
-                    "WHERE id_usuario = ? ");
+                    "WHERE id_usuario = ? AND id_receita = ? ");
             st.setString(1, obj.getNome());
             st.setString(2, obj.getTempoPreparo());
             st.setString(3, obj.getSequenciaPreparo());
             Date date = Date.valueOf(LocalDate.now());
             st.setDate(4, new Date(date.getTime()));
             st.setInt(5, obj.getAutor().getId());
+            st.setInt(6,obj.getIdReceita());
             st.executeUpdate();
             System.out.println("Mudança concluída com sucesso!");
         } catch (SQLException e) {
