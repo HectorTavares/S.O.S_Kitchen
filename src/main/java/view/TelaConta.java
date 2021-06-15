@@ -12,11 +12,10 @@ public class TelaConta {
     private final Usuario usuarioLogado;
     private final UsuarioDao usuarioDao;
     private final AdministradorDao administradorDao;
-    private final Scanner teclado;
+    private Scanner teclado;
 
     public TelaConta(Usuario usuarioLogado) {
         Connection conn = DB.getConnection();
-        this.teclado = new Scanner(System.in);
         this.usuarioLogado = usuarioLogado;
         this.administradorDao = DaoFactory.createAdministradorDao(conn);
         this.usuarioDao = DaoFactory.createUsuarioDao(conn);
@@ -24,6 +23,7 @@ public class TelaConta {
     }
 
     public void alterarDadosConta() throws InterruptedException {
+        teclado = new Scanner(System.in);
         boolean repetir = true;
         do {
             System.out.println("-----------------------------------------------------------------------");
@@ -66,6 +66,7 @@ public class TelaConta {
     }
 
     private void desativarConta() throws InterruptedException {
+        teclado = new Scanner(System.in);
         System.out.println("--- DESATIVAÇÃO DE CONTA ---");
         System.out.println("Você está ciente que depois de desativar sua conta o aplicativo fechará e \n" +
                 "você não irá mais conseguir utilizar a sua conta. \n" +
@@ -98,6 +99,7 @@ public class TelaConta {
     }
 
     private void alterarLogin() {
+        teclado = new Scanner(System.in);
         System.out.println("---ALTERAR LOGIN---\n" +
                 "Digite sua novo login : ");
         String novoLogin = teclado.nextLine();
@@ -110,6 +112,7 @@ public class TelaConta {
     }
 
     private void alterarSenha() {
+        teclado = new Scanner(System.in);
         System.out.println("---ALTERAR SENHA---\n" +
                 "Digite sua nova senha : ");
         String novaSenha = teclado.nextLine();
@@ -122,6 +125,7 @@ public class TelaConta {
     }
 
     public void alterarNome() {
+        teclado = new Scanner(System.in);
         System.out.println("---ALTERAR NOME---\n" +
                 "Digite seu novo nome: ");
         String novoNome = teclado.nextLine();

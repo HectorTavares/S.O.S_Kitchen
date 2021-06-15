@@ -22,19 +22,18 @@ public class TelaReceitas {
     private final AvaliacaoReceita telaAvaliacaoReceita;
     private final ReceitaDao receitaDao;
     private final IngredienteDao ingredienteDao;
-    private final Scanner teclado;
+    private  Scanner teclado;
 
     public TelaReceitas(Usuario usuarioLogado) {
         this.usuarioLogado = usuarioLogado;
         this.telaAvaliacaoReceita = new AvaliacaoReceita(usuarioLogado);
         Connection conn = DB.getConnection();
         this.receitaDao = DaoFactory.createReceitaDao(conn);
-        this.teclado = new Scanner(System.in);
         this.ingredienteDao = DaoFactory.createIngredienteDao(conn);
     }
 
     public void menuPesquisa() throws InterruptedException {
-        Scanner teclado = new Scanner(System.in);
+        teclado = new Scanner(System.in);
         boolean escolhido = false;
         do {
             System.out.println("-----------------------------------------------------------------------");
@@ -67,6 +66,7 @@ public class TelaReceitas {
     }
 
     private void mostrarTodasReceitas() throws InterruptedException {
+        teclado = new Scanner(System.in);
         List<Receita> resultadosDaPesquisa;
         resultadosDaPesquisa = receitaDao.findAll();
         boolean continuar = true;
@@ -120,6 +120,7 @@ public class TelaReceitas {
     }
 
     public void alterarReceita(Receita receita) throws InterruptedException {
+        teclado = new Scanner(System.in);
         boolean repetir = true;
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("---ALTERAR RECEITA---");
@@ -153,6 +154,7 @@ public class TelaReceitas {
     }
 
     public void alterarSequenciaDePreparo(Receita receita){
+        teclado = new Scanner(System.in);
         System.out.print("Digite a Nova Sequencia de preparo da sua Receita: ");
         String novaSequenciaDePreparo = teclado.nextLine();
         receita.setSequenciaPreparo(novaSequenciaDePreparo);
@@ -160,6 +162,7 @@ public class TelaReceitas {
     }
 
     public void alterarTempoDePreparo(Receita receita){
+        teclado = new Scanner(System.in);
         System.out.print("Digite o Novo Tempo de preparo da sua Receita: ");
         String novoTempoDePreparo = teclado.nextLine();
         receita.setTempoPreparo(novoTempoDePreparo);
@@ -167,6 +170,7 @@ public class TelaReceitas {
     }
 
     public void alterarNome(Receita receita){
+        teclado = new Scanner(System.in);
         System.out.print("Digite o Novo Nome da sua Receita: ");
         String novoNome = teclado.nextLine();
         receita.setNome(novoNome);
@@ -176,6 +180,7 @@ public class TelaReceitas {
 
 
     public void minhasReceitas() throws InterruptedException {
+        teclado = new Scanner(System.in);
         boolean continuar = true;
         List<Receita> minhasReceitas = new ArrayList<>(receitaDao.findAllByAutor(usuarioLogado));
         do {
@@ -236,6 +241,7 @@ public class TelaReceitas {
     }
 
     public void pesquisaPorNome() throws InterruptedException {
+        teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("---PESQUISA POR NOME--- \n" +
                 "Digite o Nome da Receita que esta procurando : \n" +
@@ -291,6 +297,7 @@ public class TelaReceitas {
     }
 
     public void pesquisaPorIngredienteTipo1() throws InterruptedException {
+        teclado = new Scanner(System.in);
         List<Receita> resultadoDaPesquisa;
         List<Ingrediente> ingredientesEscolhidos = new ArrayList<>();
         boolean continuar = true;
@@ -370,6 +377,7 @@ public class TelaReceitas {
     }
 
     public void pesquisaPorIngredienteTipo2() throws InterruptedException {
+        teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PESQUISA POR INGREDIENTE TIPO 2 ---");
         List<Receita> resultadoDaPesquisa;
@@ -449,6 +457,7 @@ public class TelaReceitas {
     }
 
     public void pesquisarPorIngredientesMenu() throws InterruptedException {
+        teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PESQUISA POR INGREDIENTES ---");
         System.out.println("No S.O.S Kitchen nós temos 2 tipos de pesquisa por ingredientes.");

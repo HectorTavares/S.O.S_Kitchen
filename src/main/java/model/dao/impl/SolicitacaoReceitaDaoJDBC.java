@@ -83,7 +83,7 @@ public class SolicitacaoReceitaDaoJDBC implements SolicitacaoReceitaDao {
             assert date != null;
             st.setDate(4, new java.sql.Date(date.getTime()));
             st.setInt(5, obj.getAutor().getId());
-            st.setBoolean(6, false);
+            st.setBoolean(6, true);
             int rowsAffected = st.executeUpdate();
             if (rowsAffected > 0) {
                 ResultSet rs = st.getGeneratedKeys();

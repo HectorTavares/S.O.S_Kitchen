@@ -15,19 +15,18 @@ import java.util.Scanner;
 
 public class FuncoesAdm {
     private final Usuario admLogado;
-    private final Scanner teclado;
     private final SolicitacaoReceitaDao solicitacaoReceitaDao;
     private final ReceitaDao receitaDao;
 
     public FuncoesAdm(Usuario admLogado) {
         this.admLogado = admLogado;
-        this.teclado = new Scanner(System.in);
         Connection conn = DB.getConnection();
         this.solicitacaoReceitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
         this.receitaDao = DaoFactory.createReceitaDao(conn);
     }
 
     public void analisarPedidosReceitas() throws InterruptedException {
+        Scanner teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PEDIDOS DE RECEITAS ---");
         System.out.println("Aqui você pode analisar os pedidos de receitas feitos pelos usuários.");

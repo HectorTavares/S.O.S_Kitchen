@@ -18,12 +18,11 @@ public class TelaCadastroReceitas {
 
     private final Usuario usuarioLogado;
     private final CadastroIngredientes cadastroIngredientes;
-    private final Scanner teclado;
+    private Scanner teclado;
     private final IngredienteDao ingredienteDao;
     private final SolicitacaoReceitaDao solicitacaoReceitaDao;
 
     public TelaCadastroReceitas(Usuario usuarioLogado) {
-        this.teclado = new Scanner(System.in);
         this.usuarioLogado = usuarioLogado;
         this.cadastroIngredientes = new CadastroIngredientes();
         Connection conn = DB.getConnection();
@@ -33,6 +32,7 @@ public class TelaCadastroReceitas {
     }
 
     public void cadastroReceitaMenu() {
+        teclado = new Scanner(System.in);
         boolean continuar = true;
         do {
             System.out.println("-----------------------------------------------------------------------");
@@ -60,7 +60,8 @@ public class TelaCadastroReceitas {
 
 
     public void cadastroReceita() {
-        Receita pedidoReceita = new Receita();
+        teclado = new Scanner(System.in);
+        Receita pedidoReceita = new Receita();;
         System.out.print("Digite Abaixo os dados da sua receita.\n" +
                 "Nome da Receita : ");
         String nomeReceita = teclado.nextLine();

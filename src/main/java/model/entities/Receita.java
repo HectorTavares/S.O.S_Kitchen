@@ -24,7 +24,7 @@ public class Receita {
 
     //construtor sem o id
     public Receita(String nome, String tempoPreparo, String sequenciaPreparo, LocalDate data_Cadastro, Usuario autor, Administrador concessorDePermissao, List<Ingrediente> ingredientes, double avalicaoMedia) {
-        this.nome = FormatadorString.formatarPalavra(nome);
+        this.nome = nome;
         this.tempoPreparo = tempoPreparo;
         this.sequenciaPreparo =FormatadorString.formatarPalavra(sequenciaPreparo);
         this.data_Cadastro = data_Cadastro;
@@ -37,7 +37,7 @@ public class Receita {
     //construtor com o id
     public Receita(int idReceita, String nome, String tempoPreparo, String sequenciaPreparo, LocalDate data_Cadastro, Usuario autor, Administrador concessorDePermissao, List<Ingrediente> ingredientes, double avalicaoMedia) {
         this.idReceita = idReceita;
-        this.nome = FormatadorString.formatarPalavra(nome);
+        this.nome = nome;
         this.tempoPreparo = tempoPreparo;
         this.sequenciaPreparo = FormatadorString.formatarFrase(sequenciaPreparo);
         this.data_Cadastro = data_Cadastro;
@@ -50,7 +50,7 @@ public class Receita {
     //usada para cadastrar receitas na tabela de solicitacao de receitas
     public Receita(int idReceita, String nome, String tempoPreparo, String sequenciaPreparo, LocalDate data_Cadastro, Usuario autor, List<Ingrediente> ingredientes) {
         this.idReceita = idReceita;
-        this.nome = FormatadorString.formatarPalavra(nome);
+        this.nome = nome;
         this.tempoPreparo = tempoPreparo;
         this.sequenciaPreparo = FormatadorString.formatarFrase(sequenciaPreparo);
         this.data_Cadastro = data_Cadastro;
@@ -60,7 +60,7 @@ public class Receita {
 
     public Receita(int idReceita, String nome, String tempoPreparo, String sequenciaPreparo, LocalDate data_Cadastro, Usuario autor, Administrador concessorDePermissao, List<Ingrediente> ingredientes) {
         this.idReceita = idReceita;
-        this.nome = FormatadorString.formatarPalavra(nome);
+        this.nome = nome;
         this.tempoPreparo =tempoPreparo;
         this.sequenciaPreparo = FormatadorString.formatarFrase(sequenciaPreparo);
         this.data_Cadastro = data_Cadastro;
@@ -123,7 +123,7 @@ public class Receita {
     }
 
     public void setNome(String nome) {
-        this.nome = FormatadorString.formatarPalavra(nome);
+        this.nome = nome;
     }
 
     public String getTempoPreparo() {
