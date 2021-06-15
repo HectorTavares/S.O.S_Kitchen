@@ -145,8 +145,8 @@ public class SolicitacaoReceitaDaoJDBC implements SolicitacaoReceitaDao {
                 }
                 Receita receita = instantiateSolicitacaoReceita(rs, user);
                 listaReceitas.add(receita);
-                st2 = conn.prepareStatement("SELECT * FROM receita_possui_ingrediente r INNER JOIN ingrediente i ON " +
-                        "r.id_ingrediente = i.id_ingrediente WHERE r.id_receita = ?");
+                st2 = conn.prepareStatement("SELECT * FROM ingrediente_da_solicitacao_receita r INNER JOIN ingrediente i ON " +
+                        "r.id_ingrediente = i.id_ingrediente WHERE r.id_solicitacao_receita = ?");
                 st2.setInt(1, receita.getIdReceita());
                 rs2 = st2.executeQuery();
                 List<Ingrediente> lista = new ArrayList<>();
