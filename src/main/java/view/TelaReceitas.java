@@ -119,10 +119,61 @@ public class TelaReceitas {
         } while (continuar);
     }
 
-    public void menuMinhasReceitas() throws InterruptedException {
+    public void alterarReceita(Receita receita) throws InterruptedException {
+        boolean repetir = true;
         System.out.println("-----------------------------------------------------------------------");
-        System.out.println("Digite");
+        System.out.println("---ALTERAR RECEITA---");
+        do{
+
+        System.out.println("Selecione o que deseja fazer:");
+        System.out.println("0 -  Voltar\n" +
+                "1 - Alterar Nome da Receita\n" +
+                "2 - Alterar Tempo de preparo\n" +
+                "3 - Alterar sequencia de preparo");
+        String escolha = teclado.next();
+        teclado.nextLine();
+        Thread.sleep(1000);
+            switch (escolha){
+                case "1":
+                    alterarNome(receita);
+                    break;
+                case "2":
+                   alterarTempoDePreparo(receita);
+                    break;
+                case "3":
+                   alterarSequenciaDePreparo(receita);
+                    break;
+                case "0":
+                    repetir = false;
+                    break;
+                default:
+                    System.out.println("Digite algo válido.");
+            }
+        }while(repetir);
     }
+
+    public void alterarSequenciaDePreparo(Receita receita){
+        System.out.print("Digite a Nova Sequencia de preparo da sua Receita: ");
+        String novaSequenciaDePreparo = teclado.nextLine();
+        receita.setSequenciaPreparo(novaSequenciaDePreparo);
+        receitaDao.update(receita);
+    }
+
+    public void alterarTempoDePreparo(Receita receita){
+        System.out.print("Digite o Novo Tempo de preparo da sua Receita: ");
+        String novoTempoDePreparo = teclado.nextLine();
+        receita.setTempoPreparo(novoTempoDePreparo);
+        receitaDao.update(receita);
+    }
+
+    public void alterarNome(Receita receita){
+        System.out.print("Digite o Novo Nome da sua Receita: ");
+        String novoNome = teclado.nextLine();
+        receita.setNome(novoNome);
+        receitaDao.update(receita);
+    }
+
+
 
     public void minhasReceitas() throws InterruptedException {
         boolean continuar = true;
@@ -143,6 +194,19 @@ public class TelaReceitas {
                 System.out.println("-----------------------------------------------------------------------");
                 telaAvaliacaoReceita.setReceitaAvaliada(minhasReceitas.get(escolhido));
                 telaAvaliacaoReceita.avaliarReceita();
+
+                System.out.println("Gostaria de mudar algo da sua receita?\n" +
+                        "(S/N) ");
+                String mudanca = teclado.next();
+
+                switch (mudanca){
+                    case "S":
+                    case "s":
+                        alterarReceita(minhasReceitas.get(escolhido));
+                        break;
+                    default:
+                        break;
+                }
 
                 System.out.println("-----------------------------------------------------------------------");
                 System.out.println("Quer ver outra Receita da lista?\n" +
