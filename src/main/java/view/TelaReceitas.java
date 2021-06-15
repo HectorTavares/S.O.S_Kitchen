@@ -20,10 +20,17 @@ public class TelaReceitas {
 
     private final Usuario usuarioLogado;
     private final AvaliacaoReceita telaAvaliacaoReceita;
+    private final ReceitaDao receitaDao;
+    private final IngredienteDao ingredienteDao;
+    private final Scanner teclado;
 
     public TelaReceitas(Usuario usuarioLogado) {
         this.usuarioLogado = usuarioLogado;
         this.telaAvaliacaoReceita = new AvaliacaoReceita(usuarioLogado);
+        Connection conn = DB.getConnection();
+        this.receitaDao = DaoFactory.createReceitaDao(conn);
+        this.teclado = new Scanner(System.in);
+        this.ingredienteDao = DaoFactory.createIngredienteDao(conn);
     }
 
     public void menuPesquisa() throws InterruptedException {
@@ -60,9 +67,6 @@ public class TelaReceitas {
     }
 
     private void mostrarTodasReceitas() throws InterruptedException {
-        Scanner teclado = new Scanner(System.in);
-        Connection conn = DB.getConnection();
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Receita> resultadosDaPesquisa;
         resultadosDaPesquisa = receitaDao.findAll();
         boolean continuar = true;
@@ -115,12 +119,13 @@ public class TelaReceitas {
         } while (continuar);
     }
 
+    public void menuMinhasReceitas() throws InterruptedException {
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("Digite");
+    }
 
     public void minhasReceitas() throws InterruptedException {
-        Connection conn = DB.getConnection();
-        Scanner teclado = new Scanner(System.in);
         boolean continuar = true;
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Receita> minhasReceitas = new ArrayList<>(receitaDao.findAllByAutor(usuarioLogado));
         do {
             if (!minhasReceitas.isEmpty()) {
@@ -167,15 +172,12 @@ public class TelaReceitas {
     }
 
     public void pesquisaPorNome() throws InterruptedException {
-        Connection conn = DB.getConnection();
-        Scanner teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("---PESQUISA POR NOME--- \n" +
                 "Digite o Nome da Receita que esta procurando : \n" +
                 "Obs: tu pode digitar palavras chave referentes ao nome da receita.");
         System.out.println("-----------------------------------------------------------------------");
         String palavraPesquisada = teclado.nextLine();
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Receita> resultadosDaPesquisa;
         resultadosDaPesquisa = receitaDao.findByName(palavraPesquisada);
         if (resultadosDaPesquisa.isEmpty()) {
@@ -225,11 +227,7 @@ public class TelaReceitas {
     }
 
     public void pesquisaPorIngredienteTipo1() throws InterruptedException {
-        Scanner teclado = new Scanner(System.in);
-        Connection conn = DB.getConnection();
         List<Receita> resultadoDaPesquisa;
-        IngredienteDao ingredienteDao = DaoFactory.createIngredienteDao(conn);
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Ingrediente> ingredientesEscolhidos = new ArrayList<>();
         boolean continuar = true;
         System.out.println("-----------------------------------------------------------------------");
@@ -267,8 +265,6 @@ public class TelaReceitas {
                     System.out.println(i + " - " + resultadoDaPesquisa.get(i));
                     System.out.println("-----------------------------------------------------------------------");
                 }
-
-
                 for (int i = 0; i < 1; i++) {
                     try {
                         System.out.println("Escolha a Receita de sua preferência: ");
@@ -312,11 +308,7 @@ public class TelaReceitas {
     public void pesquisaPorIngredienteTipo2() throws InterruptedException {
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PESQUISA POR INGREDIENTE TIPO 2 ---");
-        Scanner teclado = new Scanner(System.in);
-        Connection conn = DB.getConnection();
         List<Receita> resultadoDaPesquisa;
-        IngredienteDao ingredienteDao = DaoFactory.createIngredienteDao(conn);
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         List<Ingrediente> ingredientesEscolhidos = new ArrayList<>();
         boolean continuar = true;
         List<Ingrediente> todosIngredientes = new ArrayList<>(ingredienteDao.findAll());
@@ -393,7 +385,6 @@ public class TelaReceitas {
     }
 
     public void pesquisarPorIngredientesMenu() throws InterruptedException {
-        Scanner teclado = new Scanner(System.in);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PESQUISA POR INGREDIENTES ---");
         System.out.println("No S.O.S Kitchen nós temos 2 tipos de pesquisa por ingredientes.");

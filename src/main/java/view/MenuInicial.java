@@ -7,21 +7,18 @@ import java.util.Scanner;
 
 public class MenuInicial {
     protected final Usuario usuarioLogado;
-    protected final TelaConta telaConta ;
+    protected final TelaConta telaConta;
     protected final TelaReceitas telaReceitas;
     protected final TelaCadastroReceitas telaCadastroReceitas;
     protected final FuncoesAdm funcoesAdm;
 
-    public MenuInicial(Usuario usuarioLogado){
-        this.usuarioLogado=usuarioLogado;
+    public MenuInicial(Usuario usuarioLogado) {
+        this.usuarioLogado = usuarioLogado;
         this.telaConta = new TelaConta(usuarioLogado);
         this.telaReceitas = new TelaReceitas(usuarioLogado);
         this.telaCadastroReceitas = new TelaCadastroReceitas(usuarioLogado);
         this.funcoesAdm = new FuncoesAdm(usuarioLogado);
-        //iniciar todas as telas e arrumar metodos staticos
     }
-
-
 
     public void menuInicial() throws InterruptedException {
 
@@ -29,7 +26,7 @@ public class MenuInicial {
         boolean escolhido = false;
         do {
             System.out.println("-----------------------------------------------------------------------");
-            System.out.println("Olá "+ usuarioLogado.getNome()+", Seja Bem-Vindo ao S.O.S Kitchen, \n" +
+            System.out.println("Olá " + usuarioLogado.getNome() + ", Seja Bem-Vindo ao S.O.S Kitchen, \n" +
                     "O aplicativo que lhe socorre na cozinha! \n" +
                     "Selecione o que você deseja fazer.");
 
@@ -38,14 +35,14 @@ public class MenuInicial {
                     "2 - Registar Receitas \n" +
                     "3 - Alterar Dados da conta \n" +
                     "4 - Minhas Receitas \n");
-            if (usuarioLogado.getNivelAcesso()== NivelAcesso.ADM){
+            if (usuarioLogado.getNivelAcesso() == NivelAcesso.ADM) {
                 System.out.println("5 - Pedidos de Receita");
             }
             System.out.println("-----------------------------------------------------------------------");
             String escolha = teclado.nextLine();
-            switch (escolha){
+            switch (escolha) {
                 case "1":
-                   telaReceitas.menuPesquisa();
+                    telaReceitas.menuPesquisa();
                     break;
                 case "2":
 
@@ -58,9 +55,9 @@ public class MenuInicial {
                     telaReceitas.minhasReceitas();
                     break;
                 case "5":
-                    if (usuarioLogado.getNivelAcesso()== NivelAcesso.ADM){
+                    if (usuarioLogado.getNivelAcesso() == NivelAcesso.ADM) {
                         funcoesAdm.analisarPedidosReceitas();
-                    }else{
+                    } else {
                         System.out.println("Digite um número válido.");
                     }
                     break;
@@ -71,8 +68,6 @@ public class MenuInicial {
                     System.out.println("Digite um número válido.");
 
             }
-        }while(!escolhido);
-
+        } while (!escolhido);
     }
-
 }

@@ -9,13 +9,16 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 public class CadastroIngredientes {
-    public CadastroIngredientes() {
+    private final Scanner teclado;
+    private final IngredienteDao ingredienteDao;
 
-    }
-    public void cadastrarIngredientes(){
-        Scanner teclado = new Scanner(System.in);
+    public CadastroIngredientes() {
+        this.teclado = new Scanner(System.in);
         Connection conn = DB.getConnection();
-        IngredienteDao ingredienteDao = DaoFactory.createIngredienteDao(conn);
+        this.ingredienteDao = DaoFactory.createIngredienteDao(conn);
+    }
+
+    public void cadastrarIngredientes() {
         System.out.println("Digite o Nome do Ingrediente do qual deseja cadastrar: ");
         String novoIngrediente = teclado.nextLine();
         Ingrediente ingrediente = new Ingrediente(novoIngrediente);

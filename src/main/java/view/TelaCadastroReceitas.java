@@ -3,7 +3,6 @@ package view;
 import db.DB;
 import model.dao.DaoFactory;
 import model.dao.IngredienteDao;
-import model.dao.ReceitaDao;
 import model.dao.SolicitacaoReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
@@ -19,14 +18,21 @@ public class TelaCadastroReceitas {
 
     private final Usuario usuarioLogado;
     private final CadastroIngredientes cadastroIngredientes;
+    private final Scanner teclado;
+    private final IngredienteDao ingredienteDao;
+    private final SolicitacaoReceitaDao solicitacaoReceitaDao;
 
     public TelaCadastroReceitas(Usuario usuarioLogado) {
+        this.teclado = new Scanner(System.in);
         this.usuarioLogado = usuarioLogado;
         this.cadastroIngredientes = new CadastroIngredientes();
+        Connection conn = DB.getConnection();
+        this.ingredienteDao = DaoFactory.createIngredienteDao(conn);
+        this.solicitacaoReceitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
+
     }
 
     public void cadastroReceitaMenu() {
-        Scanner teclado = new Scanner(System.in);
         boolean continuar = true;
         do {
             System.out.println("-----------------------------------------------------------------------");
@@ -54,8 +60,6 @@ public class TelaCadastroReceitas {
 
 
     public void cadastroReceita() {
-        Scanner teclado = new Scanner(System.in);
-        Connection conn = DB.getConnection();
         Receita pedidoReceita = new Receita();
         System.out.print("Digite Abaixo os dados da sua receita.\n" +
                 "Nome da Receita : ");
@@ -71,7 +75,6 @@ public class TelaCadastroReceitas {
         pedidoReceita.setSequenciaPreparo(sequenciaDePreparo);
         pedidoReceita.setAutor(usuarioLogado);
         List<Ingrediente> ingredientesEscolhidos = new ArrayList<>();
-        IngredienteDao ingredienteDao = DaoFactory.createIngredienteDao(conn);
 
         List<Ingrediente> todosIngredientes = new ArrayList<>(ingredienteDao.findAll());
         System.out.println("Na sua receita vão quantos ingredientes?");
@@ -86,33 +89,33 @@ public class TelaCadastroReceitas {
                 "(S/N)");
         String precisaIngredientes = teclado.next();
         boolean continuar = true;
-        while(continuar)
-        switch (precisaIngredientes){
-            case "s":
-            case "S":
-                System.out.println("Quantos ingredientes faltaram?");
-                int quantidade= teclado.nextInt();
-                for (int i=1;i<=quantidade;i++){
-                cadastroIngredientes.cadastrarIngredientes();
-                }
-                todosIngredientes=ingredienteDao.findAll();
-                for (int i = 0; i < todosIngredientes.size(); i++) {
-                    System.out.println("-----------------------------------------------------------------------");
-                    System.out.println(i + " - " + todosIngredientes.get(i));
-                    System.out.println("-----------------------------------------------------------------------");
-                }
-                continuar = false;
-                break;
-            case "N":
-            case "n":
-                System.out.println("Então somente siga as proximas instruções!");
-                continuar = false;
-                break;
-            default:
-                System.out.println("Digite algo válido.");
-                precisaIngredientes = teclado.next();
-                continuar = true;
-        }
+        while (continuar)
+            switch (precisaIngredientes) {
+                case "s":
+                case "S":
+                    System.out.println("Quantos ingredientes faltaram?");
+                    int quantidade = teclado.nextInt();
+                    for (int i = 1; i <= quantidade; i++) {
+                        cadastroIngredientes.cadastrarIngredientes();
+                    }
+                    todosIngredientes = ingredienteDao.findAll();
+                    for (int i = 0; i < todosIngredientes.size(); i++) {
+                        System.out.println("-----------------------------------------------------------------------");
+                        System.out.println(i + " - " + todosIngredientes.get(i));
+                        System.out.println("-----------------------------------------------------------------------");
+                    }
+                    continuar = false;
+                    break;
+                case "N":
+                case "n":
+                    System.out.println("Então somente siga as proximas instruções!");
+                    continuar = false;
+                    break;
+                default:
+                    System.out.println("Digite algo válido.");
+                    precisaIngredientes = teclado.next();
+                    continuar = true;
+            }
         System.out.println("Escolha ingredientes diferentes.");
         for (int i = 1; i <= quantidadeIngredientes; i++) {
             try {
@@ -124,10 +127,7 @@ public class TelaCadastroReceitas {
                 i--;
             }
         }
-
         pedidoReceita.setIngredientes(ingredientesEscolhidos);
-
-        SolicitacaoReceitaDao solicitacaoReceitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
         solicitacaoReceitaDao.insert(pedidoReceita);
 
     }

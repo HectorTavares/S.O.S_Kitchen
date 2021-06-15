@@ -15,15 +15,19 @@ import java.util.Scanner;
 
 public class FuncoesAdm {
     private final Usuario admLogado;
+    private final Scanner teclado;
+    private final SolicitacaoReceitaDao solicitacaoReceitaDao;
+    private final ReceitaDao receitaDao;
+
     public FuncoesAdm(Usuario admLogado) {
-    this.admLogado=admLogado;
+        this.admLogado = admLogado;
+        this.teclado = new Scanner(System.in);
+        Connection conn = DB.getConnection();
+        this.solicitacaoReceitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
+        this.receitaDao = DaoFactory.createReceitaDao(conn);
     }
 
     public void analisarPedidosReceitas() throws InterruptedException {
-        Scanner teclado = new Scanner(System.in);
-        Connection conn = DB.getConnection();
-        SolicitacaoReceitaDao solicitacaoReceitaDao = DaoFactory.createSolicitacaoReceitaDao(conn);
-        ReceitaDao receitaDao = DaoFactory.createReceitaDao(conn);
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("--- PEDIDOS DE RECEITAS ---");
         System.out.println("Aqui você pode analisar os pedidos de receitas feitos pelos usuários.");
@@ -31,17 +35,18 @@ public class FuncoesAdm {
         do {
             List<Receita> todasSolicitacoes = solicitacaoReceitaDao.findAll();
             Sleep.sleep();
-            if (todasSolicitacoes.isEmpty()){
-                System.out.println("Nenhuma solicitação por enquanto!\n" +
-                        "Volte mais tarde!");
+            if (todasSolicitacoes.isEmpty()) {
+                System.out.println("Nenhuma solicitação por enquanto!");
+                Thread.sleep(800);
+                System.out.println("Volte mais tarde!");
                 Sleep.sleep();
-                repetir=false;
-            }else{
+                repetir = false;
+            } else {
                 int i = 0;
                 System.out.println("-----------------------------------------------------------------------");
                 for (Receita receita : todasSolicitacoes) {
                     System.out.println("-----------------------------------------------------------------------");
-                    System.out.print(i + "- "+ receita.mostrarSolicitacao());
+                    System.out.print(i + "- " + receita.mostrarSolicitacao());
                     System.out.println("-----------------------------------------------------------------------");
                     i++;
                 }
@@ -77,12 +82,11 @@ public class FuncoesAdm {
                             break;
                     }
                 }
-
                 System.out.println("Quer julgar mais algum pedido?\n" +
                         "(S/N)");
-                String decisao = teclado.next();
                 continuar = true;
                 while (continuar) {
+                    String decisao = teclado.next();
                     switch (decisao) {
                         case "S":
                         case "s":
@@ -98,12 +102,7 @@ public class FuncoesAdm {
                             continuar = true;
                     }
                 }
-
             }
-
-
         } while (repetir);
-
-
     }
 }

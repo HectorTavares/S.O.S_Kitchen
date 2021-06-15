@@ -15,15 +15,18 @@ import java.util.Scanner;
 public class AvaliacaoReceita {
     private final Usuario usuarioLogado;
     private Receita receitaAvaliada;
+    private final AvaliacaoDao avaliacaoDao;
+    private final Scanner teclado;
 
     public AvaliacaoReceita(Usuario usuarioLogado) {
+        Connection conn = DB.getConnection();
+        this.teclado = new Scanner(System.in);
         this.usuarioLogado = usuarioLogado;
+        this.avaliacaoDao = DaoFactory.createAvaliacaoDao(conn);
+
     }
 
     public void avaliarReceita() throws InterruptedException {
-        Connection conn = DB.getConnection();
-        AvaliacaoDao avaliacaoDao = DaoFactory.createAvaliacaoDao(conn);
-        Scanner teclado = new Scanner(System.in);
         boolean repetir = true;
         System.out.println("Você Gostaria de avaliar esta Receita?\n" +
                 "Avaliar as receitas faz com que a comunidade se ajude!\n" +
@@ -81,7 +84,6 @@ public class AvaliacaoReceita {
             }
         } while (repetir);
     }
-
 
     public void setReceitaAvaliada(Receita receitaAvaliada) {
         this.receitaAvaliada = receitaAvaliada;

@@ -101,7 +101,7 @@ public class TelaLogin {
         } while (!logado);
         Connection conn = DB.getConnection();
         AdministradorDao administradorDao = DaoFactory.createAdministradorDao(conn);
-        adm = administradorDao.findByLoginAndSenha(login,senha);
+        adm = administradorDao.findByLoginAndSenha(login, senha);
         MenuInicial menu = new MenuInicial(adm);
         menu.menuInicial();
         //
